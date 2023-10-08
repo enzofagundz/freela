@@ -11,4 +11,9 @@ router.post('/register', (req, res) => UserController.store(req, res))
 router.post('/login', (req, res) => AuthController.show(req, res))
 router.post('/projects', (req, res) => ProjectController.store(req, res))
 
+router.get('/job', (req, res) => {
+    const job = require('../data/job.json')
+    return res.json(job)
+})
+
 module.exports = router;

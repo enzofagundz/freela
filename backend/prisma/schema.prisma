@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String
+  password String
+  work String?
+  projects Project[]
+}
+
+model Project {
+  id    Int     @id @default(autoincrement())
+  name  String
+  description String
+  price Decimal
+  deliveryDate String
+  status String
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  categories ProjectCategoryRelation[]
+  customer CustomerProjectRelation[]
+}
+
+model ProjectCategory {
+  id    Int     @id @default(autoincrement())
+  name  String
+  projects ProjectCategoryRelation[]
+}
+
+model ProjectCategoryRelation {
+  id    Int     @id @default(autoincrement())
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  category ProjectCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+
+model Customer {
+  id    Int     @id @default(autoincrement())
+  name  String
+  email String
+  projects CustomerProjectRelation[]
+}
+
+model CustomerProjectRelation {
+  id    Int     @id @default(autoincrement())
+  project Project @relation(fields: [projectId], references: [id])
+  projectId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+}
+
+model TempUser {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  token String
+  expiresAt String
+  used Boolean @default(false)
+}

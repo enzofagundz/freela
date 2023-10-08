@@ -48,9 +48,6 @@ class AuthController {
         }
     }
 
-    async index(req, res) {
-    }
-
     async show(req, res) {
         const { email, password } = req.body
 
@@ -128,9 +125,6 @@ class AuthController {
             console.log(error)
             return res.status(500).json({ error: 'Internal server error' })
         }
-    }
-
-    async destroy(req, res) {
     }
 }
 

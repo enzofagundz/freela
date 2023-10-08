@@ -55,13 +55,7 @@ class UserController {
             return res.status(500).json({ error: 'Internal server error' })
         }
     }
-
-    async index(req, res) {
-    }
-
-    async show(req, res) {
-    }
-
+    
     async update(req, res) {
         const { email, name, password, confirmPassword, work } = req.body
 

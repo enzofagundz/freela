@@ -1,19 +1,22 @@
-const express = require('express');
-const app = express();
+const express = require('express')
+const app = express()
 
-const dotenv = require('dotenv');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const routes = require('./routes/api');
+const dotenv = require('dotenv')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const routes = require('./routes/api')
+const helmet = require('helmet')
+const compression = require('compression')
 
 dotenv.config();
-app.disable('x-powered-by');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors())
 app.use(routes)
 app.use(express.static('public'))
+app.use(helmet())
+app.use(compression())
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
-app.listen(port, () => console.log(`App rodando na porta ${port}!`));
+app.listen(port, () => console.log(`App rodando na porta ${port}!`))

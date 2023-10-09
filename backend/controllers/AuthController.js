@@ -24,8 +24,8 @@ class AuthController {
             await prisma.tempUser.create({
                 data: {
                     email,
-                    token: token.toString(),
-                    expiresAt: new Date(Date.now() + 60000).toISOString()
+                    token: token,
+                    expiresAt: new Date(Date.now() + 60000)
                 }
             })
 
@@ -99,7 +99,7 @@ class AuthController {
                 return res.status(400).json({ error: 'User not found' })
             }
 
-            if(tempUser.token !== token) {
+            if(tempUser.token !== parseInt(token)) {
                 return res.status(400).json({ error: 'Invalid token' })
             }
 
@@ -112,7 +112,7 @@ class AuthController {
                     email
                 },
                 data: {
-                    expiresAt: new Date(Date.now() - 60000).toISOString(),
+                    expiresAt: new Date(Date.now() - 60000),
                     used: true
                 }
             })

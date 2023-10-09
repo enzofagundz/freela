@@ -37,10 +37,10 @@
         <div role="main" class="ui-content">
             <form action="">
                 <div class="ui-field-contain">
-                    <label for="email">
+                    <label for="email_auth">
                         Email:
                     </label>
-                    <input type="email" name="email" id="email" value="" placeholder="Digite seu email" required>
+                    <input type="email" name="email_auth" id="email_auth" value="" placeholder="Digite seu email" required>
                 </div>
                 <button id="btn_email">
                     Enviar
@@ -82,38 +82,28 @@
         <div role="main" class="ui-content">
             <form action="">
                 <div class="ui-field-contain">
-                    <label for="name">
+                    <label for="name_register">
                         Nome:
                     </label>
-                    <input type="text" name="name" id="name" value="" placeholder="Digite seu nome" required>
+                    <input type="text" name="name_register" id="name_register" value="" placeholder="Digite seu nome" required>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="password">
+                    <label for="password_register">
                         Senha:
                     </label>
-                    <input type="password" name="password" id="password" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="password_register" id="password_register" value="" placeholder="Digite sua senha" required>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="password">
+                    <label for="confirm_password">
                         Confirme sua senha:
                     </label>
-                    <input type="password" name="password" id="password" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="confirm_password" id="confirm_password" value="" placeholder="Digite sua senha" required>
                 </div>
                 <div class="ui-field-contain">
-                    <div data-role="collapsible">
-                        <h4>
-                            Áreas de atuação:
-                        </h4>
-                        <ul data-role="listview" data-filter="true">
-                            <!-- 
-                                TODO: Receber lista de cargos do backend em formato JSON
-                                e iterar sobre a lista para criar os itens da lista
-                            -->
-                            <li>
-                                <a href="index.html">Acura</a>
-                            </li>
-                        </ul>
-                    </div>
+                    <label for="work_register">
+                        Área de atuação:
+                    </label>
+                    <input type="text" name="work_register" placeholder="Digite sua área de atuação">
                 </div>
                 <button id="btn_register">
                     Cadastrar
@@ -134,16 +124,16 @@
         <div role="main" class="ui-content">
             <form action="">
                 <div class="ui-field-contain">
-                    <label for="email">
+                    <label for="email_login">
                         Email:
                     </label>
-                    <input type="email" name="email" id="email" value="" placeholder="Digite seu email" required>
+                    <input type="email" name="email_login" id="email_login" value="" placeholder="Digite seu email" required>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="password">
+                    <label for="password_login">
                         Senha:
                     </label>
-                    <input type="password" name="password" id="password" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="password_login" id="password_login" value="" placeholder="Digite sua senha" required>
                 </div>
                 <button id="btn_login">
                     Entrar
@@ -345,10 +335,10 @@
                 </div>
 
                 <div class="ui-field-contain">
-                    <label for="project_client">
+                    <label for="project_category">
                         Categoria:
                     </label>
-                    <select name="project_client" id="project_client" required>
+                    <select name="project_category" id="project_category" required>
                         <option value="" selected>Selecione uma categoria</option>
                         <option value="0">Web Design</option>
                         <option value="1">Desenvolvimento Web</option>
@@ -374,9 +364,9 @@
 
     <script src="cordova.js"></script>
     <script src="js/index.js"></script>
-    <script src="js/main.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
+    <script src="js/main.js"></script>
 
 </body>
 

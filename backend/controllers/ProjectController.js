@@ -12,28 +12,24 @@ class ProjectController {
             status,
             userId,
             categories,
-            customer
+            customerName,
+            customerEmail,
         } = req.body
         
+        console.log(categories)
+
         try {
             const project = await prisma.project.create({
                 data: {
                     name,
                     description,
                     price,
-                    deliveryDate,
+                    deliveryDate: new Date(deliveryDate),
                     status,
-                    userId,
-                    categories: {
-                        connect: categories
-                    },
-                    customer: {
-                        connect: customer
-                    }
-                },
-                include: {
-                    categories: true,
-                    customer: true
+                    userId: parseInt(userId),
+                    customerEmail,
+                    customerName,
+                    categories
                 }
             })
 

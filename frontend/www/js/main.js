@@ -17,11 +17,11 @@ function request(endpoint, method, data) {
 }
 
 function setStorage(attribute, value) {
-    localStorage.setItem(attribute, value)
+    localStorage.setItem(attribute, JSON.stringify(value))
 }
 
 function getStorage(attribute) {
-    return localStorage.getItem(attribute)
+    return JSON.parse(localStorage.getItem(attribute))
 }
 
 function removeStorage(attribute) {
@@ -41,7 +41,7 @@ $(document).ready(function() {
         emailRegister()
         authToken()
         userRegister()
-        serLogin()
+        userLogin()
         userLogin()
         createProject()
     }
@@ -58,8 +58,8 @@ $(document).ready(function() {
             request('auth', 'POST', data)
                 .then((response) => {
                     setStorage('email', response.email)
+                    $('#email_auth').val('')
                     changePage('#page_token')
-
                 })
                 .catch((error) => {
                     console.log(error)
@@ -73,13 +73,14 @@ $(document).ready(function() {
 
             const data = {
                 email: getStorage('email'),
-                token: $('#token_auth').val()
+                token: $('#token').val()
             }
 
-            request('auth', 'PUT', data)
+            request('auth', 'PATCH', data)
                 .then((response) => {
                     setStorage('token', response.token)
-                    changePage('#page_home')
+                    $('#token').val('')
+                    changePage('#page_register')
                 })
                 .catch((error) => {
                     console.log(error)
@@ -92,7 +93,7 @@ $(document).ready(function() {
             event.preventDefault()
 
             const data = {
-                email: $('#email_register').val(),
+                email: getStorage('email'),
                 password: $('#password_register').val(),
                 confirmPassword: $('#confirm_password').val(),
                 name: $('#name_register').val(),
@@ -101,8 +102,11 @@ $(document).ready(function() {
 
             request('register', 'POST', data)
                 .then((response) => {
-                    console.log(response)
                     setStorage('user', response.user)
+                    $('#password_register').val('')
+                    $('#confirm_password').val('')
+                    $('#name_register').val('')
+                    $('#work_register').val('')
                     changePage('#home')
                 })
                 .catch((error) => {
@@ -122,7 +126,9 @@ $(document).ready(function() {
 
             request('login', 'POST', data)
                 .then((response) => {
-                    setStorage('user', response.user)
+                    setStorage('user', response)
+                    $('#email_login').val('')
+                    $('#password_login').val('')
                     changePage('#home')
                 })
                 .catch((error) => {
@@ -134,22 +140,32 @@ $(document).ready(function() {
     function createProject() {
         $('#btn_new_project').click((event) => {
             event.preventDefault()
+            const user = getStorage('user');
+            
+            console.log(user)
+            
 
             const data = {
-                name: $('#name_project').val(),
-                description: $('#description_project').val() ?? '',
-                price: $('#price_project').val(),
-                deliveryDate: $('#delivery_date_project').val(),
-                status: $('#status_project').val(),
-                userId: getStorage('user').id,
-                categories: $('#categories_project').val(),
-                customer: $('#customer_project').val()
+                name: $('#project_name').val(),
+                description: $('#project_description').val() ?? '',
+                price: $('#project_price').val(),
+                deliveryDate: $('#project_deadline').val(),
+                userId: user.id,
+                status: $('#project_status').val(),
+                categories: $('#project_category').val(),
+                customerName: $('#customer_name').val(),
+                customerEmail: $('#customer_email').val(),
             }
 
             request('projects', 'POST', data)
                 .then((response) => {
-                    console.log(response)
                     setStorage('project', response.project)
+                    $('#name_project').val('')
+                    $('#description_project').val('')
+                    $('#price_project').val('')
+                    $('#delivery_date_project').val('')
+                    $('#status_project').val('')
+                    $('#categories_project').val('')
                     changePage('#home')
                 })
                 .catch((error) => {

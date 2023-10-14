@@ -40,7 +40,8 @@
                     <label for="email_auth">
                         Email:
                     </label>
-                    <input type="email" name="email_auth" id="email_auth" value="" placeholder="Digite seu email" required>
+                    <input type="email" name="email_auth" id="email_auth" value="" placeholder="Digite seu email"
+                        required>
                 </div>
                 <button id="btn_email">
                     Enviar
@@ -51,7 +52,7 @@
             </a>
         </div>
     </div>
-
+    
     <div data-role="page" id="page_token">
         <div data-role="header">
             <h1>
@@ -72,7 +73,7 @@
             </form>
         </div>
     </div>
-
+    
     <div data-role="page" id="page_register">
         <div data-role="header">
             <h1>
@@ -85,19 +86,22 @@
                     <label for="name_register">
                         Nome:
                     </label>
-                    <input type="text" name="name_register" id="name_register" value="" placeholder="Digite seu nome" required>
+                    <input type="text" name="name_register" id="name_register" value="" placeholder="Digite seu nome"
+                        required>
                 </div>
                 <div class="ui-field-contain">
                     <label for="password_register">
                         Senha:
                     </label>
-                    <input type="password" name="password_register" id="password_register" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="password_register" id="password_register" value=""
+                        placeholder="Digite sua senha" required>
                 </div>
                 <div class="ui-field-contain">
                     <label for="confirm_password">
                         Confirme sua senha:
                     </label>
-                    <input type="password" name="confirm_password" id="confirm_password" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="confirm_password" id="confirm_password" value=""
+                        placeholder="Digite sua senha" required>
                 </div>
                 <div class="ui-field-contain">
                     <label for="work_register">
@@ -114,7 +118,7 @@
             </a>
         </div>
     </div>
-
+    
     <div data-role="page" id="page_login">
         <div data-role="header">
             <h1>
@@ -127,13 +131,15 @@
                     <label for="email_login">
                         Email:
                     </label>
-                    <input type="email" name="email_login" id="email_login" value="" placeholder="Digite seu email" required>
+                    <input type="email" name="email_login" id="email_login" value="" placeholder="Digite seu email"
+                        required>
                 </div>
                 <div class="ui-field-contain">
                     <label for="password_login">
                         Senha:
                     </label>
-                    <input type="password" name="password_login" id="password_login" value="" placeholder="Digite sua senha" required>
+                    <input type="password" name="password_login" id="password_login" value=""
+                        placeholder="Digite sua senha" required>
                 </div>
                 <button id="btn_login">
                     Entrar
@@ -144,16 +150,14 @@
             </a>
         </div>
     </div>
-
+    
     <div data-role="page" id="home">
         <div data-role="header">
             <h1 class="logo_container">
                 <img src="img/logo.png" alt="" class="logo">
             </h1>
         </div>
-
         <div role="main" class="ui-content">
-
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <h2>
@@ -163,18 +167,18 @@
                 <div class="ui-block-b">
                     <p>
                         <a 
-                            href="#popup_new_project" 
+                            href="#popup_new_project"
                             class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
                             data-rel="dialog" 
                             data-transition="pop"
                         >
                             Novo projeto
                         </a>
-                    </p>  
+                    </p>
                 </div>
             </div>
+            <ul data-role="listview" data-inset="true" id="list_projects"></ul>
         </div>
-
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -197,56 +201,39 @@
             </div>
         </div>
     </div>
-
-    <div data-role="page" id="customer">
-        <div data-role="header">
-            <h1 class="logo_container">
-                <img src="img/logo.png" alt="" class="logo">
-            </h1>
-        </div>
-
-        <div role="main" class="ui-content">
-            <h2>
-                Meus clientes
-            </h2>    
-        </div>
-
-        <div data-role="footer" data-position="fixed">
-            <div data-role="navbar">
-                <ul>
-                    <li>
-                        <a href="#home" data-icon="home" class="ui-btn-active">
-                            Página Inicial
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#customer" data-icon="user">
-                            Clientes
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#profile" data-icon="gear">
-                            Perfil
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+    
     <div data-role="page" id="profile">
         <div data-role="header">
             <h1 class="logo_container">
                 <img src="img/logo.png" alt="" class="logo">
             </h1>
         </div>
-        
+    
         <div role="main" class="ui-content">
             <h2>
-                Meus perfil
-            </h2>    
-        </div>
+                Meu perfil
+            </h2>
+            
+            <ul data-role="listview">
+                <li>
+                    <a href="#">
+                        Configurações
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        Meu perfil
+                    </a>
+                </li>
+            </ul>
 
+            <p data-position="fixed">
+                <a href="#page_login" id="btn_logout" class="ui-btn ui-shadow ui-corner-all ui-icon-power ui-btn-icon-left">
+                    Sair
+                </a>
+            </p>
+        </div>
+    
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -269,37 +256,40 @@
             </div>
         </div>
     </div>
-
+    
     <div data-role="page" id="popup_new_project">
         <div data-role="header" data-theme="b">
             <h1>
                 Novo projeto
             </h1>
         </div>
-
+    
         <div role="main" class="ui-content">
             <h2>
                 Informações do projeto
             </h2>
-
+    
             <form action="">
                 <div class="ui-field-contain">
                     <label for="project_name">
                         Nome do projeto:
                     </label>
-                    <input required type="text" name="project_name" id="project_name" value="" placeholder="Digite o nome do projeto">
+                    <input required type="text" name="project_name" id="project_name" value=""
+                        placeholder="Digite o nome do projeto">
                 </div>
                 <div class="ui-field-contain">
                     <label for="project_description">
                         Descrição do projeto:
                     </label>
-                    <textarea name="project_description" id="project_description" placeholder="Digite a descrição do projeto"></textarea>
+                    <textarea name="project_description" id="project_description"
+                        placeholder="Digite a descrição do projeto"></textarea>
                 </div>
                 <div class="ui-field-contain">
                     <label for="project_price">
                         Preço cobrado:
                     </label>
-                    <input required type="number" name="project_price" id="project_price" value="" placeholder="Digite o preço do projeto">
+                    <input required type="number" name="project_price" id="project_price" value=""
+                        placeholder="Digite o preço do projeto">
                 </div>
                 <div class="ui-field-contain">
                     <label for="project_deadline">
@@ -307,7 +297,7 @@
                     </label>
                     <input type="date" name="project_deadline" id="project_deadline" value="" required>
                 </div>
-                 <div class="ui-field-contain">
+                <div class="ui-field-contain">
                     <label for="project_status">
                         Status:
                     </label>
@@ -315,46 +305,49 @@
                         <option value="0">Em andamento</option>
                         <option value="1">Finalizado</option>
                     </select>
-                 </div>
-
+                </div>
+    
                 <h2>
                     Informações do cliente
                 </h2>
-
+    
                 <div class="ui-field-contain">
-                    <label for="project_client">
-                        Cliente:
+                    <label for="customer_name">
+                        Nome do cliente:
                     </label>
-                    <select name="project_client" id="project_client" required>
-                        <!-- 
-                            TODO: Receber lista de clientes do backend em formato JSON
-                         -->
-                        <option value="0">Cliente 1</option>
-                        <option value="1">Cliente 2</option>
-                    </select>
+                    <input required type="text" name="customer_name" id="customer_name" value=""
+                        placeholder="Digite o nome do cliente">
                 </div>
 
+                <div class="ui-field-contain">
+                    <label for="customer_email">
+                        Email do cliente:
+                    </label>
+                    <input required type="email" name="customer_email" id="customer_email" value=""
+                        placeholder="Digite o email do cliente">
+                </div>
+    
                 <div class="ui-field-contain">
                     <label for="project_category">
                         Categoria:
                     </label>
                     <select name="project_category" id="project_category" required>
                         <option value="" selected>Selecione uma categoria</option>
-                        <option value="0">Web Design</option>
-                        <option value="1">Desenvolvimento Web</option>
-                        <option value="2">Design Gráfico</option>
-                        <option value="3">Redação e Tradução</option>
-                        <option value="4">Desenvolvimento de Software</option>
-                        <option value="5">Marketing Digital</option>
-                        <option value="6">Consultoria</option>
-                        <option value="7">Vídeo e Animação</option>
-                        <option value="8">SEO e SEM</option>
-                        <option value="9">Design de Logo</option>
-                        <option value="10">Mídias Sociais</option>
-                        <option value="11">Tradução e Localização</option>
+                        <option value="Web Design">Web Design</option>
+                        <option value="Desenvolvimento Web">Desenvolvimento Web</option>
+                        <option value="Design Gráfico">Design Gráfico</option>
+                        <option value="Redação e Tradução">Redação e Tradução</option>
+                        <option value="Desenvolvimento de Software">Desenvolvimento de Software</option>
+                        <option value="Marketing Digital">Marketing Digital</option>
+                        <option value="Consultoria">Consultoria</option>
+                        <option value="Vídeo e Animação">Vídeo e Animação</option>
+                        <option value="SEO e SEM">SEO e SEM</option>
+                        <option value="Design de Logo">Design de Logo</option>
+                        <option value="Mídias Sociais">Mídias Sociais</option>
+                        <option value="Tradução e Localização">Tradução e Localização</option>
                     </select>
                 </div>
-
+    
                 <button id="btn_new_project">
                     Criar projeto
                 </button>

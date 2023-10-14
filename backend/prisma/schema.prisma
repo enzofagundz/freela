@@ -8,60 +8,32 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String
-  password String
-  work String?
-  projects Project[]
+  id        Int                    @id @default(autoincrement())
+  email     String                 @unique
+  name      String
+  password  String
+  work      String?
+  projects  Project[]
 }
 
 model Project {
-  id    Int     @id @default(autoincrement())
-  name  String
-  description String?
-  price Decimal
+  id           Int                       @id @default(autoincrement())
+  name         String
+  description  String?
+  price        Decimal
+  status       String
+  userId       Int
   deliveryDate DateTime
-  status String
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  categories ProjectCategoryRelation[]
-  customer CustomerProjectRelation[]
-}
-
-model ProjectCategory {
-  id    Int     @id @default(autoincrement())
-  name  String
-  projects ProjectCategoryRelation[]
-}
-
-model ProjectCategoryRelation {
-  id    Int     @id @default(autoincrement())
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int
-  category ProjectCategory @relation(fields: [categoryId], references: [id])
-  categoryId Int
-}
-
-model Customer {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String
-  projects CustomerProjectRelation[]
-}
-
-model CustomerProjectRelation {
-  id    Int     @id @default(autoincrement())
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int
-  customer Customer @relation(fields: [customerId], references: [id])
-  customerId Int
+  customerName String?
+  customerEmail String?
+  categories   String?
+  user         User                      @relation(fields: [userId], references: [id])
 }
 
 model TempUser {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  token Int
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  used      Boolean  @default(false)
+  token     Int
   expiresAt DateTime
-  used Boolean @default(false)
 }

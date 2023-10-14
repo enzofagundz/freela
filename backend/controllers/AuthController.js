@@ -57,7 +57,9 @@ class AuthController {
                     email
                 }
             })
-            
+
+            console.log(user)
+
             PrismaClass.disconnect()
             
             if(!user) {
@@ -76,7 +78,7 @@ class AuthController {
 
             delete user.password
 
-            return res.status(200).json({ message: 'User logged', user })
+            return res.status(200).json(user)
         
         } catch (error) {
             PrismaClass.disconnect()

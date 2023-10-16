@@ -35,6 +35,21 @@ function changePage(page) {
     })
 }
 
+function setListView(items, list) {
+    const listview = $(list)
+    items.forEach((item) => {
+        listview.append(`
+            <li>
+                <a href="#page_project" onclick="setProject(${item.id})">
+                    <h2>${item.name}</h2>
+                    <p>${item.description}</p>
+                    <p class="ui-li-aside">${item.price}</p>
+                </a>
+            </li>
+        `)
+    })
+    listview.listview('refresh')
+}
 
 $(document).ready(function() {
     function init() {
@@ -141,10 +156,6 @@ $(document).ready(function() {
         $('#btn_new_project').click((event) => {
             event.preventDefault()
             const user = getStorage('user');
-            
-            console.log(user)
-            
-
             const data = {
                 name: $('#project_name').val(),
                 description: $('#project_description').val() ?? '',
@@ -159,13 +170,16 @@ $(document).ready(function() {
 
             request('projects', 'POST', data)
                 .then((response) => {
-                    setStorage('project', response.project)
-                    $('#name_project').val('')
-                    $('#description_project').val('')
-                    $('#price_project').val('')
-                    $('#delivery_date_project').val('')
-                    $('#status_project').val('')
-                    $('#categories_project').val('')
+                    setStorage('project', response)
+                    $('#project_name').val('')
+                    $('#project_description').val('')
+                    $('#project_price').val('')
+                    $('#project_deadline').val('')
+                    $('#project_status').val('')
+                    $('#project_category').val('')
+                    $('#customer_name').val('')
+                    $('#customer_email').val('')
+                    setListView(response, '#list_projects')
                     changePage('#home')
                 })
                 .catch((error) => {

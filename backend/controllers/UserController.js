@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 
 class UserController {
     async store(req, res) {
-        const { email, password, confirmPassword, name, work } = req.body
+        const { email, password, confirmPassword, name, role } = req.body
         
         try {
             const [user, verifyUser] = await prisma.$transaction([
@@ -41,7 +41,7 @@ class UserController {
                     email,
                     password: passwordHash,
                     name,
-                    work
+                    role
                 }
             })
 

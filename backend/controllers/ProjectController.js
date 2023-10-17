@@ -4,19 +4,29 @@ const prisma = PrismaClass.getPrisma()
 
 class ProjectController {
     async store(req, res) {
-        const { 
+
+        // id
+        // name
+        // description
+        // price
+        // status
+        // deliveryDate
+        // user
+        // customerId
+        // customer
+        // categoryId
+        // category
+
+        const {
             name,
             description,
             price,
-            deliveryDate,
             status,
+            deliveryDate,
             userId,
-            categories,
-            customerName,
-            customerEmail,
+            customerId,
+            categoryId,
         } = req.body
-        
-        console.log(categories)
 
         try {
             const project = await prisma.project.create({
@@ -24,21 +34,37 @@ class ProjectController {
                     name,
                     description,
                     price,
-                    deliveryDate: new Date(deliveryDate),
                     status,
+                    deliveryDate,
+                    customer: {
+                        connect: {
+                            id: parseInt(customerId)
+                        }
+                    },
+                    category: {  // Change 'categories' to 'category'
+                        connect: {
+                            id: parseInt(categoryId)
+                        }
+                    }
+                },
+                include: {
+                    category: true,  // Change 'categories' to 'category'
+                    customer: true
+                }
+            });
+            if (!project) {
+                PrismaClass.disconnect()
+                return res.status(400).json({ error: 'Error creating project' })
+            }
+
+            await prisma.userProjectRelation.create({
+                data: {
                     userId: parseInt(userId),
-                    customerEmail,
-                    customerName,
-                    categories
+                    projectId: project.id
                 }
             })
 
             PrismaClass.disconnect()
-
-            if(!project) {
-                return res.status(400).json({ error: 'Error creating project' })
-            }
-
             return res.status(200).json(project)
         } catch (error) {
             PrismaClass.disconnect()
@@ -46,7 +72,7 @@ class ProjectController {
             return res.status(500).json({ error: 'Internal server error' })
         }
     }
-    
+
     async index(req, res) {
         const { userId } = req.params
 
@@ -63,7 +89,7 @@ class ProjectController {
 
             PrismaClass.disconnect()
 
-            if(!projects) {
+            if (!projects) {
                 return res.status(400).json({ error: 'Error listing projects' })
             }
 
@@ -103,7 +129,7 @@ class ProjectController {
 
     async update(req, res) {
         const {
-            id, 
+            id,
             name,
             description,
             price,
@@ -123,9 +149,8 @@ class ProjectController {
                     name,
                     description,
                     price,
-                    deliveryDate,
+                    deliveryDate: new Date(deliveryDate),
                     status,
-                    userId,
                     categories: {
                         connect: categories
                     },
@@ -139,11 +164,17 @@ class ProjectController {
                 }
             })
 
-            PrismaClass.disconnect()
-
-            if(!project) {
+            if (!project) {
+                PrismaClass.disconnect()
                 return res.status(400).json({ error: 'Error updating project' })
             }
+
+            await prisma.userProjectRelation.create({
+                data: {
+                    userId: parseInt(userId),
+                    projectId: project.id
+                }
+            })
 
             return res.status(200).json(project)
         } catch (error) {
@@ -162,7 +193,7 @@ class ProjectController {
                     id: parseInt(id)
                 }
             })
-            
+
             PrismaClass.disconnect()
 
             return res.status(200)

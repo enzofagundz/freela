@@ -35,20 +35,20 @@ class ProjectController {
                     description,
                     price,
                     status,
-                    deliveryDate,
+                    deliveryDate: new Date(deliveryDate),
                     customer: {
                         connect: {
                             id: parseInt(customerId)
                         }
                     },
-                    category: {  // Change 'categories' to 'category'
+                    category: {
                         connect: {
                             id: parseInt(categoryId)
                         }
                     }
                 },
                 include: {
-                    category: true,  // Change 'categories' to 'category'
+                    category: true,
                     customer: true
                 }
             });

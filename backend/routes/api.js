@@ -31,5 +31,6 @@ router.delete('/customer/:id', (req, res) => CustomerController.destroy(req, res
 
 // Categories
 router.post('/categories', (req, res) => CategoryController.store(req, res))
-
+router.get('/categories', (req, res) => CategoryController.index(req, res))
+router.get('/category/:id/:userId/projects', (req, res) => CategoryController.getProjectsByCategory(req, res))
 module.exports = router;

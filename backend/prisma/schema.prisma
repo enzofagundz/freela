@@ -2,61 +2,63 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Produção
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// Desenvolvimento
 datasource db {
   provider = "sqlite"
   url      = "file:../data/dev.db"
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  name      String
-  password  String
-  role      String?
-  project   UserProjectRelation[]
+  id       Int                    @id @default(autoincrement())
+  email    String                 @unique
+  name     String
+  password String
+  role     String?
+  customer UserCustomerRelation[]
+  project  UserProjectRelation[]
 }
 
 model Category {
-  id        Int   @id @default(autoincrement())
-  name      String
-  project   Project[]
+  id      Int       @id @default(autoincrement())
+  name    String
+  project Project[]
 }
 
-
 model Customer {
-  id        Int     @id @default(autoincrement())
-  name      String
-  email     String  @unique
-  project   Project[]
+  id      Int                    @id @default(autoincrement())
+  name    String
+  email   String
+  project Project[]
+  user    UserCustomerRelation[]
+}
+
+model UserCustomerRelation {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  customerId Int
+  customer   Customer @relation(fields: [customerId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model Project {
-  id            Int        @id @default(autoincrement())
-  name          String
-  description   String?
-  price         Decimal
-  status        String
-  deliveryDate  DateTime
-  user          UserProjectRelation[]
-  customerId    Int
-  customer      Customer  @relation(fields: [customerId], references: [id])
-  categoryId    Int
-  category      Category  @relation(fields: [categoryId], references: [id])
+  id           Int                   @id @default(autoincrement())
+  name         String
+  description  String?
+  price        Decimal
+  status       String
+  deliveryDate DateTime
+  customerId   Int
+  categoryId   Int
+  category     Category              @relation(fields: [categoryId], references: [id])
+  customer     Customer              @relation(fields: [customerId], references: [id])
+  user         UserProjectRelation[]
 }
 
 model UserProjectRelation {
-  id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  project     Project   @relation(fields: [projectId], references: [id])
-  projectId   Int
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model TempUser {

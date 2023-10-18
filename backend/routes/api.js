@@ -24,6 +24,10 @@ router.delete('/project/:id', (req, res) => ProjectController.destroy(req, res))
 
 // Customers
 router.post('/customers', (req, res) => CustomerController.store(req, res))
+router.get('/customers/:userId', (req, res) => CustomerController.index(req, res))
+router.get('/customer/:id', (req, res) => CustomerController.show(req, res))
+router.patch('/customer/:id', (req, res) => CustomerController.update(req, res))
+router.delete('/customer/:id', (req, res) => CustomerController.destroy(req, res))
 
 // Categories
 router.post('/categories', (req, res) => CategoryController.store(req, res))

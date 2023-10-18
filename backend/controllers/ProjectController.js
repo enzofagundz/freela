@@ -4,19 +4,6 @@ const prisma = PrismaClass.getPrisma()
 
 class ProjectController {
     async store(req, res) {
-
-        // id
-        // name
-        // description
-        // price
-        // status
-        // deliveryDate
-        // user
-        // customerId
-        // customer
-        // categoryId
-        // category
-
         const {
             name,
             description,
@@ -29,6 +16,24 @@ class ProjectController {
         } = req.body
 
         try {
+            const [customer, category] = await Promise.all([
+                prisma.customer.findUnique({
+                    where: {
+                        id: parseInt(customerId)
+                    }
+                }),
+                prisma.category.findUnique({
+                    where: {
+                        id: parseInt(categoryId)
+                    }
+                })
+            ]);
+
+            if (!customer || !category) {
+                PrismaClass.disconnect()
+                return res.status(400).json({ error: 'Error creating project' })
+            }
+
             const project = await prisma.project.create({
                 data: {
                     name,

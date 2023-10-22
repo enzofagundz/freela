@@ -273,7 +273,6 @@ $(document).ready(function() {
     function storeProject() {
         $('#btn_new_project').click(function(event) {
             event.preventDefault()
-
             const data = {
                 name: $('#name_project').val(),
                 price: $('#price_project').val(),
@@ -408,7 +407,7 @@ $(document).ready(function() {
                     projects.forEach(project => {
                         $('#list_projects').append(`
                             <li>
-                                <a href="#dialog" data-rel="dialog" data-transition="pop" onclick="setProject(${project.id})">
+                                <a href="#show_project" onclick="setProject(${project.id})">
                                     ${project.name}
                                 </a>
                             </li>
@@ -427,9 +426,13 @@ $(document).ready(function() {
     // get project and render modal
 
     function getProjectAndRenderDialog() {
-        $(document).on('pagebeforeshow', '#dialog', function() {
+        $(document).on('pagebeforeshow', '#show_project', function() {
             const project = getStorage('project')
-            $('h1').data('id', 'project_name').text(project.name)
+            $('#name_project_dialog').val(project.name).textinput('disable')
+            $('#price_project_dialog').val(project.price).textinput('disable')
+            $('#description_project_dialog').val(project.description).textinput('disable')
+            $('#delivery_date_project_dialog').val(project.deliveryDate.split('T')[0]).textinput('disable')
+            $('#status_project_dialog').val(project.status).selectmenu('refresh').selectmenu('disable')
         })
     }
 })

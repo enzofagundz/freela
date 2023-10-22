@@ -3,3 +3,4 @@ node_modules
 plugins/
 platforms/
 .DS_Store
+.vscode/

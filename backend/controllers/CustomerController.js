@@ -149,9 +149,9 @@ class CustomerController {
         const { id, userId } = req.params
 
         try {
-            const projects = await prisma.$queryRaw`SELECT * FROM Project
-            INNER JOIN UserProjectRelation ON Project.id = UserProjectRelation.projectId
-            WHERE UserProjectRelation.userId = ${userId} AND Project.customerId = ${id}`
+            const projects = await prisma.$queryRaw`SELECT * FROM Project a
+            INNER JOIN UserProjectRelation b ON a.id = b.projectId
+            WHERE b.userId = ${userId} AND a.customerId = ${id}`
             
             PrismaClass.disconnect()
 

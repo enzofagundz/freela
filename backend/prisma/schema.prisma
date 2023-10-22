@@ -15,12 +15,14 @@ model User {
   role     String?
   customer UserCustomerRelation[]
   project  UserProjectRelation[]
+  category UserCategoryRelation[]
 }
 
 model Category {
   id      Int       @id @default(autoincrement())
   name    String
   project Project[]
+  user    UserCategoryRelation[]
 }
 
 model Customer {
@@ -67,4 +69,12 @@ model TempUser {
   used      Boolean  @default(false)
   token     Int
   expiresAt DateTime
+}
+
+model UserCategoryRelation {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }

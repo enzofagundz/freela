@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <meta name="color-scheme" content="light">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
     <link rel="stylesheet" href="css/jquery.mobile.icons.min.css">
     <link rel="stylesheet" href="css/freela.css">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-
+    <title>Freela</title>
     <style>
         .logo {
             width: 100%;
@@ -22,12 +23,20 @@
             justify-content: center;
             align-items: center;
         }
-    </style>
 
-    <title>Freela</title>
+        #profile_settings>ul {
+            padding: 0 1em;
+            margin-top: 2em;
+        }
+
+        #profile_settings>p {
+            margin-top: 2em;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- PAGE EMAIL -->
     <div data-role="page" id="page_email">
         <div data-role="header">
             <h1>
@@ -52,7 +61,9 @@
             </a>
         </div>
     </div>
-    
+
+    <!-- PAGE TOKEN -->
+
     <div data-role="page" id="page_token">
         <div data-role="header">
             <h1>
@@ -73,7 +84,9 @@
             </form>
         </div>
     </div>
-    
+
+    <!-- PAGE REGISTER -->
+
     <div data-role="page" id="page_register">
         <div data-role="header">
             <h1>
@@ -118,7 +131,9 @@
             </a>
         </div>
     </div>
-    
+
+    <!-- PAGE LOGIN -->
+
     <div data-role="page" id="page_login">
         <div data-role="header">
             <h1>
@@ -150,13 +165,16 @@
             </a>
         </div>
     </div>
-    
+
+    <!-- HOME -->
+
     <div data-role="page" id="home">
         <div data-role="header">
             <h1 class="logo_container">
                 <img src="img/logo.png" alt="" class="logo">
             </h1>
         </div>
+
         <div role="main" class="ui-content">
             <div class="ui-grid-a">
                 <div class="ui-block-a">
@@ -166,54 +184,56 @@
                 </div>
                 <div class="ui-block-b">
                     <p>
-                        <a 
-                            href="#popup_new_project"
-                            class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
-                            data-rel="dialog" 
-                            data-transition="pop"
+                        <a href="#new_customer" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
                         >
                             Novo projeto
                         </a>
                     </p>
                 </div>
             </div>
-            <ul data-role="listview" data-inset="true" id="list_projects"></ul>
-        </div>
-        <div data-role="footer" data-position="fixed">
-            <div data-role="navbar">
-                <ul>
-                    <li>
-                        <a href="#home" data-icon="home" class="ui-btn-active">
-                            Página Inicial
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#customer" data-icon="user">
-                            Clientes
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#profile" data-icon="gear">
-                            Perfil
-                        </a>
-                    </li>
-                </ul>
+            <ul data-role="listview" data-inset="true" id="list_projects" data-theme="a" data-split-theme="b">
+            </ul>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <div data-role="navbar">
+                        <ul>
+                            <li>
+                                <a href="#home" data-icon="home" class="ui-btn-active">
+                                    Página Inicial
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#customer" data-icon="user">
+                                    Clientes
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#profile" data-icon="gear">
+                                    Perfil
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
+
+
+    <!-- PROFILE -->
+
     <div data-role="page" id="profile">
         <div data-role="header">
             <h1 class="logo_container">
                 <img src="img/logo.png" alt="" class="logo">
             </h1>
         </div>
-    
-        <div role="main" class="ui-content">
+
+        <div role="main" class="ui-content" id="profile_settings">
             <h2>
                 Meu perfil
             </h2>
-            
+
             <ul data-role="listview">
                 <li>
                     <a href="#">
@@ -221,19 +241,20 @@
                     </a>
                 </li>
                 <li>
-                    <a href="">
-                        Meu perfil
+                    <a href="#popup_new_category" data-rel="dialog" data-transition="pop">
+                        Nova categoria
                     </a>
                 </li>
             </ul>
 
             <p data-position="fixed">
-                <a href="#page_login" id="btn_logout" class="ui-btn ui-shadow ui-corner-all ui-icon-power ui-btn-icon-left">
+                <a href="#page_login" id="btn_logout"
+                    class="ui-btn ui-shadow ui-corner-all ui-icon-power ui-btn-icon-left">
                     Sair
                 </a>
             </p>
         </div>
-    
+
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -256,102 +277,409 @@
             </div>
         </div>
     </div>
-    
-    <div data-role="page" id="popup_new_project">
+
+    <!-- CUSTOMER -->
+
+    <div data-role="page" id="customer">
+        <div data-role="header">
+            <h1 class="logo_container">
+                <img src="img/logo.png" alt="" class="logo">
+            </h1>
+        </div>
+
+        <div role="main" class="ui-content">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <h2>
+                        Meus clientes
+                    </h2>
+                </div>
+                <div class="ui-block-b">
+                    <p>
+                        <a href="#popup_new_customer"
+                            class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
+                                data-rel=" dialog" data-transition="pop">
+                            Novo cliente
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <ul data-role="listview" data-inset="true" id="list_customers"></ul>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW CUSTOMER -->
+
+    <div data-role="page" id="new_customer">
         <div data-role="header" data-theme="b">
             <h1>
                 Novo projeto
             </h1>
         </div>
-    
-        <div role="main" class="ui-content">
-            <h2>
-                Informações do projeto
-            </h2>
-    
-            <form action="">
+
+        <div data-role="main" class="ui-content">
+            <form>
                 <div class="ui-field-contain">
-                    <label for="project_name">
-                        Nome do projeto:
+                    <label for="name_customer">
+                        Nome:
                     </label>
-                    <input required type="text" name="project_name" id="project_name" value=""
-                        placeholder="Digite o nome do projeto">
+                    <input type="text" name="name_customer" id="name_customer" value=""
+                        placeholder="Digite o nome do cliente" required>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="project_description">
-                        Descrição do projeto:
+                    <label for="email_customer">
+                        Email:
                     </label>
-                    <textarea name="project_description" id="project_description"
+                    <input type="email" name="email_customer" id="email_customer" value=""
+                        placeholder="Digite o email do cliente" required>
+                </div>
+                <button id="btn_new_customer">
+                    Cadastrar
+                </button>
+            </form>
+            <h2>
+                Ou selecione um cliente já cadastrado
+            </h2>
+            <a href="#select_customer" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
+            >
+                Selecionar cliente
+            </a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+                <div data-role="navbar">
+                    <ul>
+                        <li>
+                            <a href="#home" data-icon="home" class="ui-btn-active">
+                                Página Inicial
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#customer" data-icon="user">
+                                Clientes
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#profile" data-icon="gear">
+                                Perfil
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+        </div>
+    </div>
+
+    <!-- SELECT CUSTOMER -->
+
+    <div data-role="page" id="select_customer">
+        <div data-role="header" data-theme="b">
+            <h1>
+                Novo projeto
+            </h1>
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <h1>
+                Selecione um cliente
+            </h1>
+
+            <form>
+                <div class="ui-field-contain">
+                    <label for="select_customer_input">
+                        Clientes:
+                    </label>
+                    <select name="select_customer_input" id="select_customer_input">
+                        <option value="" selected>Selecione um cliente</option>
+                    </select>
+                </div>
+                <button 
+                    id="btn_select_customer"
+                    class="ui-btn ui-shadow ui-corner-all ui-icon-check ui-btn-icon-left"
+                    data-theme="b"
+                >
+                    Selecionar
+                </button>
+            </form>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW CATEGORY -->
+
+    <div data-role="page" id="new_category">
+        <div data-role="header" data-theme="b">
+            <h1>
+                Novo projeto
+            </h1>
+        </div>
+
+        <div data-role="main" class="ui-content">
+            <form>
+                <div class="ui-field-contain">
+                    <label for="name_category">
+                        Nome:
+                    </label>
+                    <input type="text" name="name_category" id="name_category" value=""
+                        placeholder="Digite o nome da categoria" required>
+                </div>
+                <button id="btn_new_category">
+                    Cadastrar
+                </button>
+            </form>
+            <h2>
+                Ou selecione uma categoria já cadastrada
+            </h2>
+            <a href="#select_category" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-left"" 
+            >
+                Selecionar categoria
+            </a>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SELECT CATEGORY -->
+
+    <div id="select_category" data-role="page">
+        <div data-role="header" data-theme="b">
+            <h1>
+                Novo projeto
+            </h1>
+        </div>
+
+        <div data-role="main" class="ui-content">
+            <h1>
+                Selecione uma categoria
+            </h1>
+
+            <form>
+                <div class="ui-field-contain">
+                    <label for="select_category_input">
+                        Categorias:
+                    </label>
+                    <select name="select_category_input" id="select_category_input">
+                        <option value="" selected>Selecione uma categoria</option>
+                    </select>
+                </div>
+                <button 
+                    id="btn_select_category"
+                    class="ui-btn ui-shadow ui-corner-all ui-icon-check ui-btn-icon-left"
+                    data-theme="b"
+                >
+                    Selecionar categoria
+                </button>
+            </form>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW PROJECT -->
+
+    <div id="new_project" data-role="page">
+        <div data-role="header" data-theme="b">
+            <h1>
+                Novo projeto
+            </h1>
+        </div>
+        <div data-role="main" class="ui-content">
+            <form>
+                <div class="ui-field-contain">
+                    <label for="name_project">
+                        Nome:
+                    </label>
+                    <input type="text" name="name_project" id="name_project" value=""
+                        placeholder="Digite o nome do projeto" required>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="price_project">
+                        Preço cobrado:
+                    </label>
+                    <input type="number" name="price_project" id="price_project" value=""
+                        placeholder="Digite o preço cobrado" required>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="description_project">
+                        Descrição:
+                    </label>
+                    <textarea name="description_project" id="description_project" cols="30" rows="10"
                         placeholder="Digite a descrição do projeto"></textarea>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="project_price">
-                        Preço cobrado:
-                    </label>
-                    <input required type="number" name="project_price" id="project_price" value=""
-                        placeholder="Digite o preço do projeto">
-                </div>
-                <div class="ui-field-contain">
-                    <label for="project_deadline">
+                    <label for="delivery_date_project">
                         Data de entrega:
                     </label>
-                    <input type="date" name="project_deadline" id="project_deadline" value="" required>
+                    <input type="date" name="delivery_date_project" id="delivery_date_project" value=""
+                        placeholder="Digite a data de entrega" required>
                 </div>
                 <div class="ui-field-contain">
-                    <label for="project_status">
+                    <label for="status_project">
                         Status:
                     </label>
-                    <select name="project_status" id="project_status" required>
+                    <select name="status_project" id="status_project">
                         <option value="0">Em andamento</option>
                         <option value="1">Finalizado</option>
                     </select>
                 </div>
-    
-                <h2>
-                    Informações do cliente
-                </h2>
-    
-                <div class="ui-field-contain">
-                    <label for="customer_name">
-                        Nome do cliente:
-                    </label>
-                    <input required type="text" name="customer_name" id="customer_name" value=""
-                        placeholder="Digite o nome do cliente">
-                </div>
-
-                <div class="ui-field-contain">
-                    <label for="customer_email">
-                        Email do cliente:
-                    </label>
-                    <input required type="email" name="customer_email" id="customer_email" value=""
-                        placeholder="Digite o email do cliente">
-                </div>
-    
-                <div class="ui-field-contain">
-                    <label for="project_category">
-                        Categoria:
-                    </label>
-                    <select name="project_category" id="project_category" required>
-                        <option value="" selected>Selecione uma categoria</option>
-                        <option value="Web Design">Web Design</option>
-                        <option value="Desenvolvimento Web">Desenvolvimento Web</option>
-                        <option value="Design Gráfico">Design Gráfico</option>
-                        <option value="Redação e Tradução">Redação e Tradução</option>
-                        <option value="Desenvolvimento de Software">Desenvolvimento de Software</option>
-                        <option value="Marketing Digital">Marketing Digital</option>
-                        <option value="Consultoria">Consultoria</option>
-                        <option value="Vídeo e Animação">Vídeo e Animação</option>
-                        <option value="SEO e SEM">SEO e SEM</option>
-                        <option value="Design de Logo">Design de Logo</option>
-                        <option value="Mídias Sociais">Mídias Sociais</option>
-                        <option value="Tradução e Localização">Tradução e Localização</option>
-                    </select>
-                </div>
-    
                 <button id="btn_new_project">
-                    Criar projeto
+                    Cadastrar
                 </button>
             </form>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- DIALOG -->
+
+    <div data-role="page" data-close-btn="none" id="dialog">
+        <div data-role="header">
+            <h1 data-id="project_name">
+                
+            </h1>
+        </div>
+
+        <div role="main" class="ui-content">
+            <form>
+                <div class="ui-field-contain">
+                    <label for="name_project_dialog">
+                        Nome:
+                    </label>
+                    <input type="text" name="name_project_dialog" id="name_project_dialog" value=""
+                        placeholder="Digite o nome do projeto" required>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="price_project_dialog">
+                        Preço cobrado:
+                    </label>
+                    <input type="number" name="price_project_dialog" id="price_project_dialog" value=""
+                        placeholder="Digite o preço cobrado" required>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="description_project_dialog">
+                        Descrição:
+                    </label>
+                    <textarea name="description_project_dialog" id="description_project_dialog" cols="30" rows="10"
+                        placeholder="Digite a descrição do projeto"></textarea>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="delivery_date_project_dialog">
+                        Data de entrega:
+                    </label>
+                    <input type="date" name="delivery_date_project_dialog" id="delivery_date_project_dialog" value=""
+                        placeholder="Digite a data de entrega" required>
+                </div>
+                <div class="ui-field-contain">
+                    <label for="status_project">
+                        Status:
+                    </label>
+                    <select name="status_project" id="status_project">
+                        <option value="0">Em andamento</option>
+                        <option value="1">Finalizado</option>
+                    </select>
+                </div>
+            </form>
+        
+
+            <a href="#home" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Voltar</a>
         </div>
     </div>
 
@@ -360,7 +688,6 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.min.js"></script>
     <script src="js/main.js"></script>
-
 </body>
 
 </html>

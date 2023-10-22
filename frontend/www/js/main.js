@@ -1,89 +1,125 @@
 const API_URL = 'http://localhost:3000/'
 
-function request(endpoint, method, data) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: API_URL + endpoint,
-            method: method,
-            data: data,
-            success: function(response) {
-                resolve(response)
-            },
-            error: function(error) {
-                reject(error)
+function request(method, path, body) {
+    // se o não possuir body, então não envia body
+    if(!body) {
+        return fetch(`${API_URL}${path}`, {
+            method,
+            headers: {
+                'Content-Type': 'application/json'
             }
         })
-    })
+    }
+
+    return fetch(API_URL + path, {
+        method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify(body)
+        })
 }
 
-function setStorage(attribute, value) {
-    localStorage.setItem(attribute, JSON.stringify(value))
+function setStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
 }
 
-function getStorage(attribute) {
-    return JSON.parse(localStorage.getItem(attribute))
+function getStorage(key) {
+    return JSON.parse(localStorage.getItem(key))
 }
 
-function removeStorage(attribute) {
-    localStorage.removeItem(attribute)
+function clearStorage(key) {
+    localStorage.removeItem(key)
+}
+
+function setSession(key, value) {
+    sessionStorage.setItem(key, JSON.stringify(value))
+}
+
+function getSession(key) {
+    return JSON.parse(sessionStorage.getItem(key))
+}
+
+function clearSession(key) {
+    sessionStorage.removeItem(key)
 }
 
 function changePage(page) {
-    $.mobile.changePage(page, {
-        transition: 'slide',
-        changeHash: false
-    })
+    $.mobile.changePage(page, { transition: 'slide', changeHash: false })
 }
 
-function setListView(items, list) {
-    const listview = $(list)
-    items.forEach((item) => {
-        listview.append(`
-            <li>
-                <a href="#page_project" onclick="setProject(${item.id})">
-                    <h2>${item.name}</h2>
-                    <p>${item.description}</p>
-                    <p class="ui-li-aside">${item.price}</p>
-                </a>
-            </li>
-        `)
-    })
-    listview.listview('refresh')
+function logout() {
+    localStorage.clear()
+    changePage('#login')
 }
+
+function setMessage(message) {
+    navigator.notification.alert(
+        message,
+        null,
+        'Aviso',
+        'Ok'
+    )
+}
+
+function setProject(id) {
+    const projects = getStorage('projects')
+    const project = projects.find(project => project.id == id)
+    setStorage('project', project)
+}
+
 
 $(document).ready(function() {
     function init() {
         emailRegister()
-        authToken()
+        tokenRegister()
         userRegister()
         userLogin()
-        userLogin()
-        createProject()
+        storeCustomer()
+        storeCategory()
+        storeProject()
+        selectCustomers()
+        selectCategories()
+        getCustomerBySelect()
+        getCategoryBySelect()
+        listProjects()
+        getProjectAndRenderDialog()
     }
 
     init()
 
+    // register
+
     function emailRegister() {
-        $('#btn_email').click((event) => {
+        $('#btn_email').click(function(event) {
             event.preventDefault()
-            const data = {
-                email: $('#email_auth').val()
+
+            const data ={
+                email: $('#email_auth').val(),
             }
 
-            request('auth', 'POST', data)
-                .then((response) => {
-                    setStorage('email', response.email)
+            request('POST', 'auth', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+                    setStorage('email', res.email)
                     $('#email_auth').val('')
+                    setMessage('E-mail enviado com sucesso!')
                     changePage('#page_token')
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log(error)
+                    setMessage('Erro ao enviar e-mail')
                 })
         })
     }
 
-    function authToken() {
-        $('#btn_token').click((event) => {
+    // auth token
+
+    function tokenRegister() {
+        $('#btn_token').click(function(event) {
             event.preventDefault()
 
             const data = {
@@ -91,47 +127,62 @@ $(document).ready(function() {
                 token: $('#token').val()
             }
 
-            request('auth', 'PATCH', data)
-                .then((response) => {
-                    setStorage('token', response.token)
+            request('PATCH', 'auth', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+                    setStorage('token', res.token)
                     $('#token').val('')
                     changePage('#page_register')
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log(error)
+                    setMessage('Erro ao autenticar token')
                 })
         })
     }
 
+    // register
+
     function userRegister() {
-        $('#btn_register').click((event) => {
+        $('#btn_register').click(function(event) {
             event.preventDefault()
 
             const data = {
                 email: getStorage('email'),
                 password: $('#password_register').val(),
-                confirmPassword: $('#confirm_password').val(),
                 name: $('#name_register').val(),
-                work: $('#work_register').val()
+                confirmPassword: $('#confirm_password').val(),
+                work: $('#work_register').val(),
             }
 
-            request('register', 'POST', data)
-                .then((response) => {
-                    setStorage('user', response.user)
+            request('POST', 'register', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+                    setStorage('user', res.user)
                     $('#password_register').val('')
                     $('#confirm_password').val('')
                     $('#name_register').val('')
                     $('#work_register').val('')
+                    setMessage('Usuário cadastrado com sucesso!')
                     changePage('#home')
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log(error)
+                    setMessage('Erro ao cadastrar usuário')
                 })
         })
     }
 
+    // login
+
     function userLogin() {
-        $('#btn_login').click((event) => {
+        $('#btn_login').click(function(event) {
             event.preventDefault()
 
             const data = {
@@ -139,52 +190,246 @@ $(document).ready(function() {
                 password: $('#password_login').val()
             }
 
-            request('login', 'POST', data)
-                .then((response) => {
-                    setStorage('user', response)
+            request('POST', 'login', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+                    setStorage('user', res)
                     $('#email_login').val('')
                     $('#password_login').val('')
                     changePage('#home')
                 })
-                .catch((error) => {
+        })
+    }
+
+    // register customer
+
+    function storeCustomer() {
+        $('#btn_new_customer').click(function(event) {
+            event.preventDefault()
+
+            const data = {
+                name: $('#name_customer').val(),
+                email: $('#email_customer').val(),
+                userId: getStorage('user').id
+            }
+
+            request('POST', 'customers', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    $('#name_customer').val('')
+                    $('#email_customer').val('')
+                    setSession('customer', res.customer)
+                    setMessage('Cliente cadastrado com sucesso!')
+                    changePage('#new_category')
+                })
+                .catch(error => {
                     console.log(error)
+                    setMessage('Erro ao cadastrar cliente')
                 })
         })
     }
 
-    function createProject() {
-        $('#btn_new_project').click((event) => {
+    // register category
+
+    function storeCategory() {
+        $('#btn_new_category').click(function(event) {
+            // userId e name
+
             event.preventDefault()
-            const user = getStorage('user');
+
             const data = {
-                name: $('#project_name').val(),
-                description: $('#project_description').val() ?? '',
-                price: $('#project_price').val(),
-                deliveryDate: $('#project_deadline').val(),
-                userId: user.id,
-                status: $('#project_status').val(),
-                categories: $('#project_category').val(),
-                customerName: $('#customer_name').val(),
-                customerEmail: $('#customer_email').val(),
+                name: $('#name_category').val(),
+                userId: getStorage('user').id
+            }
+            
+            request('POST', 'categories', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    $('#name_category').val('')
+                    setSession('category', res.category)
+                    setMessage('Categoria cadastrada com sucesso!')
+                    changePage('#new_project')
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao cadastrar categoria')
+                })
+        })
+    }
+
+    // register project
+
+    function storeProject() {
+        $('#btn_new_project').click(function(event) {
+            event.preventDefault()
+
+            const data = {
+                name: $('#name_project').val(),
+                price: $('#price_project').val(),
+                description: $('#description_project').val() || null,
+                deliveryDate: new Date($('#delivery_date_project').val()).toISOString(),
+                status: $('#status_project').val() || 'Em andamento',
+                userId: getStorage('user').id,
+                customerId: getSession('customer').id,
+                categoryId: getSession('category').id
             }
 
-            request('projects', 'POST', data)
-                .then((response) => {
-                    setStorage('project', response)
-                    $('#project_name').val('')
-                    $('#project_description').val('')
-                    $('#project_price').val('')
-                    $('#project_deadline').val('')
-                    $('#project_status').val('')
-                    $('#project_category').val('')
-                    $('#customer_name').val('')
-                    $('#customer_email').val('')
-                    setListView(response, '#list_projects')
+            request('POST', 'projects', data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    $('#name_project').val('')
+                    $('#price_project').val('')
+                    $('#description_project').val('')
+                    $('#delivery_date_project').val('')
+                    clearSession('customer')
+                    clearSession('category')
+                    setMessage('Projeto cadastrado com sucesso!')
                     changePage('#home')
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.log(error)
+                    setMessage('Erro ao cadastrar projeto')
                 })
+        })
+    }
+
+    // select customers
+
+    function selectCustomers() {
+        $(document).on('pagebeforeshow', '#select_customer', function() {
+            request('GET', `customers/${getStorage('user').id}`, null)
+                .then(res => res.json())
+                .then(res => {
+
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    let customers = res.customers
+
+                    customers.forEach(customer => {
+                        $('#select_customer_input').append(`
+                            <option value="${customer.id}">${customer.name}</option>
+                        `)
+                    })
+
+                    $('#select_customer_input').selectmenu('refresh') 
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao listar clientes')
+                })
+        })
+    }
+
+    // select categories
+
+    function selectCategories() {
+        $(document).on('pagebeforeshow', '#select_category', function() {
+            request('GET', `categories/${getStorage('user').id}`, null)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    let categories = res.categories
+
+                    categories.forEach(category => {
+                        $('#select_category_input').append(`
+                            <option value="${category.id}">${category.name}</option>
+                        `)
+                    })
+
+                    $('#select_category_input').selectmenu('refresh')
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao listar categorias')
+                })
+        })
+    }
+
+    // get customer by select
+
+    function getCustomerBySelect() {
+        $('#btn_select_customer').click(function(event) {
+            event.preventDefault()
+            const data = {
+                id: $('#select_customer_input').val()
+            }
+            setSession('customer', data)
+            changePage('#new_category')
+        })
+    }
+
+    // get category by select
+
+    function getCategoryBySelect() {
+        $('#btn_select_category').click(function(event) {
+            event.preventDefault()
+            const data = {
+                id: $('#select_category_input').val()
+            }
+            setSession('category', data)
+            changePage('#new_project')
+        })
+    }
+
+    function listProjects() {
+        $(document).on('pagebeforeshow', '#home', function() {
+            request('GET', `projects/${getStorage('user').id}`, null)
+                .then(res => res.json())
+                .then(res => {
+
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    let projects = res
+                    setStorage('projects', projects)
+                    $('#list_projects').empty()
+                    
+                    projects.forEach(project => {
+                        $('#list_projects').append(`
+                            <li>
+                                <a href="#dialog" data-rel="dialog" data-transition="pop" onclick="setProject(${project.id})">
+                                    ${project.name}
+                                </a>
+                            </li>
+                        `)
+                    })
+
+                    $('#list_projects').listview('refresh')
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao listar projetos')
+                })
+        })
+    }
+
+    // get project and render modal
+
+    function getProjectAndRenderDialog() {
+        $(document).on('pagebeforeshow', '#dialog', function() {
+            const project = getStorage('project')
+            $('h1').data('id', 'project_name').text(project.name)
         })
     }
 })

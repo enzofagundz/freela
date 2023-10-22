@@ -4,7 +4,7 @@ const prisma = PrismaClass.getPrisma()
 
 class CategoryController {
     async store(req, res) {
-        const { name } = req.body
+        const { name, userId } = req.body
 
         try {
             const category = await prisma.category.create({
@@ -13,10 +13,19 @@ class CategoryController {
                 }
             })
 
-            PrismaClass.disconnect()
             if(!category) {
+                PrismaClass.disconnect()
                 return res.status(400).json({ error: 'Error creating category' })
             }
+
+            PrismaClass.disconnect()
+
+            await prisma.userCategoryRelation.create({
+                data: {
+                    userId: parseInt(userId),
+                    categoryId: category.id
+                }
+            })
 
             return res.status(200).json({ category })
         } catch (error) {
@@ -27,10 +36,15 @@ class CategoryController {
     }
 
     async index(req, res) {
-        try {
-            const categories = await prisma.category.findMany()
+        const { userId } = req.params
 
+        try {
+            const categories = await prisma.$queryRaw`SELECT * FROM Category a
+            INNER JOIN UserCategoryRelation b ON a.id = b.categoryId
+            WHERE b.userId = ${userId}`
+            
             PrismaClass.disconnect()
+
             if(!categories) {
                 return res.status(400).json({ error: 'Error listing categories' })
             }
@@ -47,9 +61,9 @@ class CategoryController {
         const { id, userId } = req.params
 
         try {
-            const projects = await prisma.$queryRaw`SELECT * FROM Project
-            INNER JOIN UserProjectRelation ON Project.id = UserProjectRelation.projectId
-            WHERE UserProjectRelation.userId = ${userId} AND Project.categoryId = ${id}`
+            const projects = await prisma.$queryRaw`SELECT * FROM Project a
+            INNER JOIN UserProjectRelation b ON a.id = b.projectId
+            WHERE b.userId = ${userId} AND a.categoryId = ${id}`
             
             PrismaClass.disconnect()
 

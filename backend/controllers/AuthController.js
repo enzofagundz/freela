@@ -58,8 +58,6 @@ class AuthController {
                 }
             })
 
-            console.log(user)
-
             PrismaClass.disconnect()
             
             if(!user) {

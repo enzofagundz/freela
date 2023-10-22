@@ -32,11 +32,11 @@ router.get('/customers/:userId', (req, res) => CustomerController.index(req, res
 router.get('/customer/:id', (req, res) => CustomerController.show(req, res))
 router.patch('/customer/:id', (req, res) => CustomerController.update(req, res))
 router.delete('/customer/:id', (req, res) => CustomerController.destroy(req, res))
-router.get('/customer/:id/:userId/projects', (req, res) => CustomerController.getProjectsByCustomer(req, res))
+router.get('/customer/:id/user/:userId', (req, res) => CustomerController.getProjectsByCustomer(req, res))
 
 // Categories
 router.post('/categories', (req, res) => CategoryController.store(req, res))
-router.get('/categories', (req, res) => CategoryController.index(req, res))
-router.get('/category/:id/:userId/projects', (req, res) => CategoryController.getProjectsByCategory(req, res))
+router.get('/categories/:userId', (req, res) => CategoryController.index(req, res))
+router.get('/category/:id/projects/:userId', (req, res) => CategoryController.getProjectsByCategory(req, res))
 
 module.exports = router;

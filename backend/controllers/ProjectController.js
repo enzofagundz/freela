@@ -140,6 +140,9 @@ class ProjectController {
     async update(req, res) {
         const { id } = req.params
 
+        console.log(req.params)
+        console.log(req.body)
+
         const {
             name,
             description,
@@ -160,7 +163,7 @@ class ProjectController {
                     description,
                     price,
                     status,
-                    deliveryDate: new Date(deliveryDate),
+                    deliveryDate: new Date(deliveryDate).toISOString(),
                     customer: {
                         connect: {
                             id: parseInt(customerId)

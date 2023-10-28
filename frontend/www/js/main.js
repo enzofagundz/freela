@@ -84,6 +84,9 @@ $(document).ready(function() {
         getCategoryBySelect()
         listProjects()
         getProjectAndRenderDialog()
+        editProject()
+        updateProject()
+        destroyProject()
     }
 
     init()
@@ -428,11 +431,101 @@ $(document).ready(function() {
     function getProjectAndRenderDialog() {
         $(document).on('pagebeforeshow', '#show_project', function() {
             const project = getStorage('project')
+
+            // #btns_edit_project_dialog -> vai sumir
+            $('#btns_edit_project_dialog').attr('hidden', false)
+            // btns_show_project_dialog -> vai aparecer
+            $('#btns_show_project_dialog').attr('hidden', true)
+
             $('#name_project_dialog').val(project.name).textinput('disable')
             $('#price_project_dialog').val(project.price).textinput('disable')
             $('#description_project_dialog').val(project.description).textinput('disable')
             $('#delivery_date_project_dialog').val(project.deliveryDate.split('T')[0]).textinput('disable')
             $('#status_project_dialog').val(project.status).selectmenu('refresh').selectmenu('disable')
+        })
+    }
+
+    // edit project
+
+    function editProject() {
+        $('#btn_edit_project_dialog').click(function(event) {
+            event.preventDefault()
+            $('#name_project_dialog').textinput('enable')
+            $('#price_project_dialog').textinput('enable')
+            $('#description_project_dialog').textinput('enable')
+            $('#delivery_date_project_dialog').textinput('enable')
+            $('#status_project_dialog').selectmenu('enable')
+
+            // #btns_edit_project_dialog -> vai aparecer
+
+            $('#btns_edit_project_dialog').attr('hidden', true)
+
+            // btns_show_project_dialog -> vai sumir
+
+            $('#btns_show_project_dialog').attr('hidden', false)
+        })
+    }
+
+    // update project
+
+    function updateProject() {
+        $('#btn_update_project_dialog').click(function(event) {
+            event.preventDefault()
+
+            const project = getStorage('project')
+            
+            const data = {
+                name: $('#name_project_dialog').val(),
+                price: $('#price_project_dialog').val(),
+                description: $('#description_project_dialog').val() || null,
+                deliveryDate: new Date($('#delivery_date_project_dialog').val()),
+                status: $('#status_project_dialog').val() || 'Em andamento',
+                userId: getStorage('user').id,
+                customerId: project.customerId,
+                categoryId: project.categoryId
+            }
+
+            request('PATCH', `project/${getStorage('project').id}`, data)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    clearSession('customer')
+                    clearSession('category')
+                    setMessage('Projeto atualizado com sucesso!')
+                    changePage('#home')
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao atualizar projeto')
+                })
+        })
+    }
+
+    // destroy project
+
+    function destroyProject() {
+        $('#btn_destroy_project_dialog').click(function(event) {
+            event.preventDefault()
+
+            request('DELETE', `project/${getStorage('project').id}`, null)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    clearSession('customer')
+                    clearSession('category')
+                    setMessage('Projeto excluído com sucesso!')
+                    changePage('#home')
+                })
+                .catch(error => {
+                    console.log(error)
+                    setMessage('Erro ao excluir projeto')
+                })
         })
     }
 })

@@ -628,7 +628,7 @@
         </div>
     </div>
 
-    <!-- DIALOG -->
+    <!-- SHOW PROJECT -->
 
     <div data-role="page" id="show_project">
         <div data-role="header">
@@ -677,9 +677,83 @@
                     </select>
                 </div>
             </form>
-        
+            
+            <div class="ui-grid-b" id="btns_edit_project_dialog">
+                <div class="ui-block-a">
+                    <a href="#home" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+                        Voltar
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <button
+                        id="btn_edit_project_dialog"
+                        class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-edit ui-btn-icon-left"
+                    >
+                        Editar
+                    </button>
+                </div>
+                <div class="ui-block-c">
+                    <a
+                        data-rel="dialog" data-transition="pop"
+                        href="#popup_delete_project"
+                        class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-delete ui-btn-icon-left"
+                    >
+                        Excluir
+                    </a>
+                </div>
+            </div>
+            
+            <div class="ui-grid-a" hidden id="btns_show_project_dialog">
+                <div class="ui-block-a">
+                    <button
+                        id="btn_update_project_dialog"
+                        class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-edit ui-btn-icon-left"
+                    >
+                        Salvar
+                    </button>
+                </div>
+                <div class="ui-block-b">
+                    <a href="#home" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+                        Cancelar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <a href="#home" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Voltar</a>
+    <!-- DESTROY PROJECT -->
+
+    <div 
+        data-role="page"
+        id="popup_delete_project"
+        data-back-btn="false"
+        data-close-btn="false"
+    >
+        <div data-role="header" data-theme="b">
+            <h1>
+                Excluir projeto
+            </h1>
+        </div>
+
+        <div data-role="main" class="ui-content">
+            <h1>
+                Tem certeza que deseja excluir este projeto?
+            </h1>
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <a href="#home" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">
+                        Voltar
+                    </a>
+                </div>
+                <div class="ui-block-b">
+                    <button
+                        id="btn_destroy_project_dialog"
+                        class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-delete ui-btn-icon-left"
+                    >
+                        Excluir
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 

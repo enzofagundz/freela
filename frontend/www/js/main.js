@@ -1,7 +1,6 @@
 const API_URL = 'http://localhost:3000/'
 
 function request(method, path, body) {
-    // se o não possuir body, então não envia body
     if(!body) {
         return fetch(`${API_URL}${path}`, {
             method,
@@ -87,6 +86,7 @@ $(document).ready(function() {
         editProject()
         updateProject()
         destroyProject()
+        listCustomers()
     }
 
     init()
@@ -323,7 +323,6 @@ $(document).ready(function() {
                     }
 
                     let customers = res.customers
-
                     customers.forEach(customer => {
                         $('#select_customer_input').append(`
                             <option value="${customer.id}">${customer.name}</option>
@@ -528,4 +527,36 @@ $(document).ready(function() {
                 })
         })
     }
+
+    // index customers
+
+    function listCustomers() {
+        $(document).on('pagebeforeshow', '#customer', function() {
+            request('GET', `customers/${getStorage('user').id}`, null)
+                .then(res => res.json())
+                .then(res => {
+                    if(res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    let customers = res.customers
+                    setStorage('customers', customers)
+                    $('#list_customers').empty()
+
+                    customers.forEach(customer => {
+                        $('#list_customers').append(`
+                            <li>
+                                <a href="#show_customer" onclick="setCustomer(${customer.id})">
+                                    ${customer.name}
+                                </a>
+                            </li>
+                        `)
+                    })
+
+                    $('#list_customers').listview('refresh')
+                })
+        })
+    }
+
+    
 })

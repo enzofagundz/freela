@@ -4,3 +4,4 @@ plugins/
 platforms/
 .DS_Store
 .vscode/
+*.zip

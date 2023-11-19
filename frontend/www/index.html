@@ -10,29 +10,8 @@
     <link rel="stylesheet" href="css/jquery.mobile.icons.min.css">
     <link rel="stylesheet" href="css/freela.css">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/index.css">
     <title>Freela</title>
-    <style>
-        .logo {
-            width: 100%;
-            max-width: 32px;
-        }
-
-        .logo_container {
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #profile_settings>ul {
-            padding: 0 1em;
-            margin-top: 2em;
-        }
-
-        #profile_settings>p {
-            margin-top: 2em;
-        }
-    </style>
 </head>
 
 <body>
@@ -191,9 +170,12 @@
                     </p>
                 </div>
             </div>
+
+            <span class="updating-text" data-id="home">Atualizando</span>
+
             <ul data-role="listview" data-inset="true" id="list_projects" data-theme="a" data-split-theme="b"></ul>
         </div>
-
+        
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -215,9 +197,7 @@
                 </ul>
             </div>
         </div>
-        </div>
     </div>
-
 
     <!-- PROFILE -->
 
@@ -233,25 +213,24 @@
                 Meu perfil
             </h2>
 
-            <ul data-role="listview">
-                <li>
-                    <a href="#">
-                        Configurações
-                    </a>
-                </li>
-                <li>
-                    <a href="#popup_new_category" data-rel="dialog" data-transition="pop">
-                        Nova categoria
-                    </a>
-                </li>
-            </ul>
+            <div data-role="collapsible" id="user_data">
+                <h2>
+                    Dados do usuário
+                </h2>
+                <h3>
+                    Nome: <span id="user_name"></span>
+                </h3>
+                <p>
+                    Profissão: <span id="user_work"></span>
+                </p>
+                <p>
+                    E-mail: <span id="user_email"></span>
+                </p>
+            </div>
 
-            <p data-position="fixed">
-                <a href="#page_login" id="btn_logout"
-                    class="ui-btn ui-shadow ui-corner-all ui-icon-power ui-btn-icon-left">
-                    Sair
-                </a>
-            </p>
+            <a href="#page_login" id="btn_logout" class="ui-btn ui-shadow ui-corner-all ui-icon-power ui-btn-icon-left">
+                Sair
+            </a>
         </div>
 
         <div data-role="footer" data-position="fixed">
@@ -294,9 +273,10 @@
                     </h2>
                 </div>
             </div>
+            <span class="updating-text" data-id="customer">Atualizando</span>
             <ul data-role="listview" data-inset="true" id="list_customers" data-theme="a" data-split-theme="b">
+            </ul>
         </div>
-
         <div data-role="footer" data-position="fixed">
             <div data-role="navbar">
                 <ul>
@@ -746,6 +726,46 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- SHOW CUSTOMER -->
+
+    <div data-role="page" id="show_customer">
+        <div data-role="header">
+            <h1>
+                Cliente
+            </h1>
+        </div>
+
+        <div role="main" class="ui-content">
+            <h2>
+                Informações dos projetos
+            </h2>
+            <span class="updating-text" data-id="show_customer">Atualizando</span>
+            <ul data-role="listview" data-inset="true" id="list_projects_customer" data-theme="a" data-split-theme="b"></ul>
+        </div>
+
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li>
+                        <a href="#home" data-icon="home" class="ui-btn-active">
+                            Página Inicial
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#customer" data-icon="user">
+                            Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#profile" data-icon="gear">
+                            Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
     </div>
 
     <script src="cordova.js"></script>

@@ -1,7 +1,7 @@
 const API_URL = 'http://localhost:3000/'
 
 function request(method, path, body) {
-    if(!body) {
+    if (!body) {
         return fetch(`${API_URL}${path}`, {
             method,
             headers: {
@@ -15,8 +15,8 @@ function request(method, path, body) {
         headers: {
             'Content-Type': 'application/json'
         },
-            body: JSON.stringify(body)
-        })
+        body: JSON.stringify(body)
+    })
 }
 
 function setStorage(key, value) {
@@ -67,8 +67,40 @@ function setProject(id) {
     setStorage('project', project)
 }
 
+function setCustomer(id) {
+    clearSession('customer')
+    const customers = getStorage('customers')
+    const customer = customers.find(customer => customer.id == id)
+    setStorage('customer', customer)
+}
 
-$(document).ready(function() {
+function showLoader() {
+    $.mobile.loading('show', {
+        text: 'Carregando...',
+        textVisible: true,
+        theme: 'b',
+        html: ''
+    })
+}
+
+function hideLoader() {
+    $.mobile.loading('hide')
+}
+
+function showUpdatingText(properties) {
+    $('.updating-text').data('id', `${properties.id}`).css('display', 'block')
+}
+
+function hideUpdatingText(properties) {
+    $('.updating-text').data('id', `${properties.id}`).fadeOut()
+}
+
+function clearStorages() {
+    localStorage.clear()
+    sessionStorage.clear()
+}
+
+$(document).ready(function () {
     function init() {
         emailRegister()
         tokenRegister()
@@ -87,32 +119,37 @@ $(document).ready(function() {
         updateProject()
         destroyProject()
         listCustomers()
+        getCustomerAndRenderDialog()
+        renderUserData()
+        clearStorages()
     }
 
     init()
 
-    // register
+    // register email
 
     function emailRegister() {
-        $('#btn_email').click(function(event) {
+        $('#btn_email').click(function (event) {
             event.preventDefault()
-
-            const data ={
+            showLoader()
+            const data = {
                 email: $('#email_auth').val(),
             }
-
             request('POST', 'auth', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
                     setStorage('email', res.email)
                     $('#email_auth').val('')
                     setMessage('E-mail enviado com sucesso!')
                     changePage('#page_token')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao enviar e-mail')
                 })
@@ -122,9 +159,9 @@ $(document).ready(function() {
     // auth token
 
     function tokenRegister() {
-        $('#btn_token').click(function(event) {
+        $('#btn_token').click(function (event) {
             event.preventDefault()
-
+            showLoader()
             const data = {
                 email: getStorage('email'),
                 token: $('#token').val()
@@ -133,26 +170,29 @@ $(document).ready(function() {
             request('PATCH', 'auth', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
                     setStorage('token', res.token)
                     $('#token').val('')
                     changePage('#page_register')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao autenticar token')
                 })
         })
     }
 
-    // register
+    // register user
 
     function userRegister() {
-        $('#btn_register').click(function(event) {
+        $('#btn_register').click(function (event) {
             event.preventDefault()
-
+            showLoader()
             const data = {
                 email: getStorage('email'),
                 password: $('#password_register').val(),
@@ -164,7 +204,8 @@ $(document).ready(function() {
             request('POST', 'register', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
                     setStorage('user', res.user)
@@ -176,6 +217,7 @@ $(document).ready(function() {
                     changePage('#home')
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao cadastrar usuário')
                 })
@@ -185,24 +227,30 @@ $(document).ready(function() {
     // login
 
     function userLogin() {
-        $('#btn_login').click(function(event) {
+        $('#btn_login').click(function (event) {
             event.preventDefault()
-
+            showLoader()
             const data = {
                 email: $('#email_login').val(),
                 password: $('#password_login').val()
             }
-
             request('POST', 'login', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
                     setStorage('user', res)
                     $('#email_login').val('')
                     $('#password_login').val('')
                     changePage('#home')
+                    hideLoader()
+                })
+                .catch(error => {
+                    hideLoader()
+                    console.log(error)
+                    setMessage('Erro ao fazer login')
                 })
         })
     }
@@ -210,7 +258,7 @@ $(document).ready(function() {
     // register customer
 
     function storeCustomer() {
-        $('#btn_new_customer').click(function(event) {
+        $('#btn_new_customer').click(function (event) {
             event.preventDefault()
 
             const data = {
@@ -219,10 +267,16 @@ $(document).ready(function() {
                 userId: getStorage('user').id
             }
 
+            if (data.name == '' || data.email == '') {
+                return setMessage('Preencha todos os campos')
+            }
+
+            showLoader()
             request('POST', 'customers', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
 
@@ -231,8 +285,10 @@ $(document).ready(function() {
                     setSession('customer', res.customer)
                     setMessage('Cliente cadastrado com sucesso!')
                     changePage('#new_category')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao cadastrar cliente')
                 })
@@ -242,20 +298,24 @@ $(document).ready(function() {
     // register category
 
     function storeCategory() {
-        $('#btn_new_category').click(function(event) {
-            // userId e name
-
+        $('#btn_new_category').click(function (event) {
             event.preventDefault()
-
             const data = {
                 name: $('#name_category').val(),
                 userId: getStorage('user').id
             }
             
+            if (data.name == '') {
+                return setMessage('Preencha todos os campos')
+            }
+
+            showLoader()
+
             request('POST', 'categories', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
 
@@ -263,8 +323,10 @@ $(document).ready(function() {
                     setSession('category', res.category)
                     setMessage('Categoria cadastrada com sucesso!')
                     changePage('#new_project')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao cadastrar categoria')
                 })
@@ -274,7 +336,7 @@ $(document).ready(function() {
     // register project
 
     function storeProject() {
-        $('#btn_new_project').click(function(event) {
+        $('#btn_new_project').click(function (event) {
             event.preventDefault()
             const data = {
                 name: $('#name_project').val(),
@@ -287,10 +349,13 @@ $(document).ready(function() {
                 categoryId: getSession('category').id
             }
 
+            showLoader()
+
             request('POST', 'projects', data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
 
@@ -302,8 +367,10 @@ $(document).ready(function() {
                     clearSession('category')
                     setMessage('Projeto cadastrado com sucesso!')
                     changePage('#home')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao cadastrar projeto')
                 })
@@ -313,23 +380,34 @@ $(document).ready(function() {
     // select customers
 
     function selectCustomers() {
-        $(document).on('pagebeforeshow', '#select_customer', function() {
+        $(document).on('pagebeforeshow', '#select_customer', function () {
+            
+            $('#select_customer_input').attr('disabled', true)
+
             request('GET', `customers/${getStorage('user').id}`, null)
                 .then(res => res.json())
                 .then(res => {
 
-                    if(res.error) {
+                    if (res.error) {
                         return setMessage(res.error)
                     }
 
                     let customers = res.customers
+
+                    $('#select_customer_input').empty()
+
+                    $('#select_customer_input').append(`
+                        <option value="" selected>Selecione um cliente</option>
+                    `)
+
                     customers.forEach(customer => {
                         $('#select_customer_input').append(`
                             <option value="${customer.id}">${customer.name}</option>
                         `)
                     })
 
-                    $('#select_customer_input').selectmenu('refresh') 
+                    $('#select_customer_input').selectmenu('refresh')
+                    $('#select_customer_input').attr('disabled', false)
                 })
                 .catch(error => {
                     console.log(error)
@@ -341,11 +419,14 @@ $(document).ready(function() {
     // select categories
 
     function selectCategories() {
-        $(document).on('pagebeforeshow', '#select_category', function() {
+        $(document).on('pagebeforeshow', '#select_category', function () {
+
+            $('#select_category_input').attr('disabled', true)
+
             request('GET', `categories/${getStorage('user').id}`, null)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
                         return setMessage(res.error)
                     }
 
@@ -358,6 +439,7 @@ $(document).ready(function() {
                     })
 
                     $('#select_category_input').selectmenu('refresh')
+                    $('#select_category_input').attr('disabled', false)
                 })
                 .catch(error => {
                     console.log(error)
@@ -369,7 +451,7 @@ $(document).ready(function() {
     // get customer by select
 
     function getCustomerBySelect() {
-        $('#btn_select_customer').click(function(event) {
+        $('#btn_select_customer').click(function (event) {
             event.preventDefault()
             const data = {
                 id: $('#select_customer_input').val()
@@ -382,7 +464,7 @@ $(document).ready(function() {
     // get category by select
 
     function getCategoryBySelect() {
-        $('#btn_select_category').click(function(event) {
+        $('#btn_select_category').click(function (event) {
             event.preventDefault()
             const data = {
                 id: $('#select_category_input').val()
@@ -392,20 +474,31 @@ $(document).ready(function() {
         })
     }
 
+    // index projects
+
     function listProjects() {
-        $(document).on('pagebeforeshow', '#home', function() {
+        $(document).on('pagebeforeshow', '#home', function () {
+
+            showUpdatingText({
+                id: 'home',
+            })
+
             request('GET', `projects/${getStorage('user').id}`, null)
                 .then(res => res.json())
                 .then(res => {
 
-                    if(res.error) {
+                    if (res.error) {
                         return setMessage(res.error)
                     }
 
                     let projects = res
                     setStorage('projects', projects)
                     $('#list_projects').empty()
-                    
+
+                    hideUpdatingText({
+                        id: 'home',
+                    })
+
                     projects.forEach(project => {
                         $('#list_projects').append(`
                             <li>
@@ -428,14 +521,10 @@ $(document).ready(function() {
     // get project and render modal
 
     function getProjectAndRenderDialog() {
-        $(document).on('pagebeforeshow', '#show_project', function() {
+        $(document).on('pagebeforeshow', '#show_project', function () {
             const project = getStorage('project')
-
-            // #btns_edit_project_dialog -> vai sumir
             $('#btns_edit_project_dialog').attr('hidden', false)
-            // btns_show_project_dialog -> vai aparecer
             $('#btns_show_project_dialog').attr('hidden', true)
-
             $('#name_project_dialog').val(project.name).textinput('disable')
             $('#price_project_dialog').val(project.price).textinput('disable')
             $('#description_project_dialog').val(project.description).textinput('disable')
@@ -447,20 +536,14 @@ $(document).ready(function() {
     // edit project
 
     function editProject() {
-        $('#btn_edit_project_dialog').click(function(event) {
+        $('#btn_edit_project_dialog').click(function (event) {
             event.preventDefault()
             $('#name_project_dialog').textinput('enable')
             $('#price_project_dialog').textinput('enable')
             $('#description_project_dialog').textinput('enable')
             $('#delivery_date_project_dialog').textinput('enable')
             $('#status_project_dialog').selectmenu('enable')
-
-            // #btns_edit_project_dialog -> vai aparecer
-
             $('#btns_edit_project_dialog').attr('hidden', true)
-
-            // btns_show_project_dialog -> vai sumir
-
             $('#btns_show_project_dialog').attr('hidden', false)
         })
     }
@@ -468,11 +551,10 @@ $(document).ready(function() {
     // update project
 
     function updateProject() {
-        $('#btn_update_project_dialog').click(function(event) {
+        $('#btn_update_project_dialog').click(function (event) {
             event.preventDefault()
-
+            showLoader()
             const project = getStorage('project')
-            
             const data = {
                 name: $('#name_project_dialog').val(),
                 price: $('#price_project_dialog').val(),
@@ -487,16 +569,18 @@ $(document).ready(function() {
             request('PATCH', `project/${getStorage('project').id}`, data)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
-
                     clearSession('customer')
                     clearSession('category')
                     setMessage('Projeto atualizado com sucesso!')
                     changePage('#home')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao atualizar projeto')
                 })
@@ -506,13 +590,14 @@ $(document).ready(function() {
     // destroy project
 
     function destroyProject() {
-        $('#btn_destroy_project_dialog').click(function(event) {
+        $('#btn_destroy_project_dialog').click(function (event) {
             event.preventDefault()
-
+            showLoader()
             request('DELETE', `project/${getStorage('project').id}`, null)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
+                        hideLoader()
                         return setMessage(res.error)
                     }
 
@@ -520,8 +605,10 @@ $(document).ready(function() {
                     clearSession('category')
                     setMessage('Projeto excluído com sucesso!')
                     changePage('#home')
+                    hideLoader()
                 })
                 .catch(error => {
+                    hideLoader()
                     console.log(error)
                     setMessage('Erro ao excluir projeto')
                 })
@@ -531,17 +618,26 @@ $(document).ready(function() {
     // index customers
 
     function listCustomers() {
-        $(document).on('pagebeforeshow', '#customer', function() {
+        $(document).on('pagebeforeshow', '#customer', function () {
+
+            showUpdatingText({
+                id: 'customer',
+            })
+
             request('GET', `customers/${getStorage('user').id}`, null)
                 .then(res => res.json())
                 .then(res => {
-                    if(res.error) {
+                    if (res.error) {
                         return setMessage(res.error)
                     }
 
                     let customers = res.customers
                     setStorage('customers', customers)
                     $('#list_customers').empty()
+
+                    hideUpdatingText({
+                        id: 'customer',
+                    })
 
                     customers.forEach(customer => {
                         $('#list_customers').append(`
@@ -558,5 +654,99 @@ $(document).ready(function() {
         })
     }
 
-    
+    function getCustomerAndRenderDialog() {
+        $(document).on('pagebeforeshow', '#show_customer', function () {
+
+            showUpdatingText({
+                id: 'show_customer',
+            })
+
+            const customer = getStorage('customer')
+            console.log(customer.id)
+            request('GET', `customer/${customer.id}/user/${customer.id}`, null)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.error) {
+                        return setMessage(res.error)
+                    }
+
+                    const projectResume = res.projects
+                    console.log(projectResume)
+                    $('#list_projects_customer').empty()
+
+                    hideUpdatingText({
+                        id: 'show_customer',
+                    })
+
+                    if (projectResume.length == 0) {
+                        $('#list_projects_customer').append(`
+                            <li>
+                                <a href="#new_project">
+                                    <h2>
+                                        Nenhum projeto cadastrado
+                                    </h2>
+                                </a>
+                            </li>
+                        `)
+
+                        $('#list_projects_customer').listview('refresh')
+
+                        return
+                    }
+
+                    let data = {
+                        priceTotal: [
+                            'Preço total',
+                            0
+                        ],
+                        projectsTotal: [
+                            'Projetos totais',
+                            0
+                        ],
+                        projectsInProgress: [
+                            'Projetos em andamento',
+                            0
+                        ],
+                        projectsCompleted: [
+                            'Projetos concluídos',
+                            0
+                        ]
+                    }
+
+                    projectResume.forEach(project => {
+                        data.priceTotal[1] += project.price
+                        data.projectsTotal[1]++
+                        project.status == 0 ? data.projectsInProgress[1]++ : data.projectsCompleted[1]++
+                    })
+
+                    for (let key in data) {
+                        $('#list_projects_customer').append(`
+                            <li>
+                                <h2>
+                                    ${data[key][0]}
+                                </h2>
+                                <p>
+                                    ${data[key][1]}
+                                </p>
+                            </li>
+                        `)
+                    }
+
+                    $('#list_projects_customer').listview('refresh')
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        })
+    }
+
+    function renderUserData() {
+        $(document).on('pagebeforecreate', '#profile', function () {
+            const user = getStorage('user')
+
+            $('#user_name').text(user.name ?? 'Não informado')
+            $('#user_work').text(user.work ?? 'Não informado')
+            $('#user_email').text(user.email ?? 'Não informado')
+        })
+    }
 })

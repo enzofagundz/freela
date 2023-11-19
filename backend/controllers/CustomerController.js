@@ -14,9 +14,9 @@ class CustomerController {
                 }
             })
 
-            if(!customer) {
+            if (!customer) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error creating customer' })
+                return res.status(400).json({ error: 'Erro ao criar cliente' })
             }
 
             await prisma.userCustomerRelation.create({
@@ -30,7 +30,7 @@ class CustomerController {
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -49,15 +49,15 @@ class CustomerController {
             })
 
             PrismaClass.disconnect()
-            if(!customers) {
-                return res.status(400).json({ error: 'Error listing customers' })
+            if (!customers) {
+                return res.status(400).json({ error: 'Erro ao listar clientes' })
             }
 
             return res.status(200).json({ customers })
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -73,15 +73,15 @@ class CustomerController {
 
             PrismaClass.disconnect()
 
-            if(!customer) {
-                return res.status(400).json({ error: 'Error listing customer' })
+            if (!customer) {
+                return res.status(400).json({ error: 'Erro ao listar clientes' })
             }
 
             return res.status(200).json({ customer })
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -103,15 +103,15 @@ class CustomerController {
 
             PrismaClass.disconnect()
 
-            if(!customer) {
-                return res.status(400).json({ error: 'Error updating customer' })
+            if (!customer) {
+                return res.status(400).json({ error: 'Erro ao listar clientes' })
             }
 
             return res.status(200).json({ customer })
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -133,30 +133,43 @@ class CustomerController {
 
             PrismaClass.disconnect()
 
-            if(!customer) {
-                return res.status(400).json({ error: 'Error deleting customer' })
+            if (!customer) {
+                return res.status(400).json({ error: 'Erro ao excluir cliente' })
             }
 
-            return res.status(200).json({ message: 'Customer deleted' })
+            return res.status(200).json({ ok: true })
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
     async getProjectsByCustomer(req, res) {
         const { id, userId } = req.params
+        
+        console.log(id, userId);
 
         try {
-            const projects = await prisma.$queryRaw`SELECT * FROM Project a
-            INNER JOIN UserProjectRelation b ON a.id = b.projectId
-            WHERE b.userId = ${userId} AND a.customerId = ${id}`
+            // const projects = await prisma.project.findMany({
+            //     where: {
+            //         user: {
+            //             some: {
+            //                 userId: parseInt(userId),
+            //             },
+            //         },
+            //         categoryId: parseInt(id),
+            //     },
+            // });
+
+            // pegar todos os projetos do usuário que tenha o userId
             
+            console.log(projects)
+
             PrismaClass.disconnect()
 
-            if(!projects) {
-                return res.status(400).json({ error: 'Error listing projects' })
+            if (!projects) {
+                return res.status(400).json({ error: 'Erro ao listar projetos' })
             }
 
             const projectsWithConvertedPrice = projects.map(project => ({
@@ -168,7 +181,7 @@ class CustomerController {
         } catch (error) {
             console.log(error)
             PrismaClass.disconnect()
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 }

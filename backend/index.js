@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
 
-const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
+const dotenv = require('dotenv')
 const cors = require('cors')
 const routes = require('./routes/api')
 const helmet = require('helmet')

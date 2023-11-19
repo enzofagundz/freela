@@ -18,6 +18,7 @@ router.post('/login', (req, res) => AuthController.show(req, res))
 
 // Users
 router.post('/register', (req, res) => UserController.store(req, res))
+router.patch('/user/:id', (req, res) => UserController.update(req, res))
 
 // Projects
 router.post('/projects', (req, res) => ProjectController.store(req, res))

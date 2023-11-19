@@ -31,7 +31,7 @@ class ProjectController {
 
             if (!customer || !category) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error creating project' })
+                return res.status(400).json({ error: 'Erro ao criar projeto' })
             }
 
             const project = await prisma.project.create({
@@ -59,7 +59,7 @@ class ProjectController {
             });
             if (!project) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error creating project' })
+                return res.status(400).json({ error: 'Erro ao criar projeto' })
             }
 
             await prisma.userProjectRelation.create({
@@ -74,7 +74,7 @@ class ProjectController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -97,7 +97,7 @@ class ProjectController {
             
             if (!projects) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error listing projects' })
+                return res.status(400).json({ error: 'Erro ao listar projetos' })
             }
 
             PrismaClass.disconnect()
@@ -105,7 +105,7 @@ class ProjectController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -125,7 +125,7 @@ class ProjectController {
 
             if (!project) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error listing project' })
+                return res.status(400).json({ error: 'Erro ao listar projeto' })
             }
 
             PrismaClass.disconnect()
@@ -133,15 +133,12 @@ class ProjectController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
     async update(req, res) {
         const { id } = req.params
-
-        console.log(req.params)
-        console.log(req.body)
 
         const {
             name,
@@ -183,7 +180,7 @@ class ProjectController {
 
             if (!project) {
                 PrismaClass.disconnect()
-                return res.status(400).json({ error: 'Error updating project' })
+                return res.status(400).json({ error: 'Erro ao atualizar projeto' })
             }
 
             PrismaClass.disconnect()
@@ -191,7 +188,7 @@ class ProjectController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -212,11 +209,11 @@ class ProjectController {
             })
 
             PrismaClass.disconnect()
-            return res.status(200).json({ message: 'Project deleted' })
+            return res.status(200).json({ ok: true })
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 }

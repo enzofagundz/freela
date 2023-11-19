@@ -16,7 +16,7 @@ class AuthController {
             })
 
             if(user) {
-                return res.status(400).json({ error: 'User already exists' }) 
+                return res.status(400).json({ error: 'Usuário inválido' }) 
             }
 
             const token = Math.floor(100000 + Math.random() * 900000);
@@ -40,11 +40,11 @@ class AuthController {
 
             await Transporter.sendMail(mailOptions)
 
-            return res.status(200).json({ message: 'Email sent', email })
+            return res.status(200).json({ message: 'E-mail enviado com sucesso', email })
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente' })
         }
     }
 
@@ -61,27 +61,28 @@ class AuthController {
             PrismaClass.disconnect()
             
             if(!user) {
-                return res.status(400).json({ error: 'User not found' })
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
             }
 
-            bcrypt.compare(password, user.password, (err, result) => {
-                if(err) {
-                    return res.status(400).json({ error: 'Password does not match' })
-                }
-
+            bcrypt.compare(password, user.password).then((result, err) => {
                 if(!result) {
-                    return res.status(400).json({ error: 'Password does not match' })
+                    console.log(result)
+                    return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
                 }
+                
+                if(err) {
+                    console.log(err)
+                    return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
+                }
+
+                delete user.password
+                
+                return res.status(200).json(user)
             })
-
-            delete user.password
-
-            return res.status(200).json(user)
-        
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente' })
         }
     }
 
@@ -96,15 +97,15 @@ class AuthController {
             })
 
             if(!tempUser) {
-                return res.status(400).json({ error: 'User not found' })
+                return res.status(400).json({ error: 'Usuário e/ou token inválidos' })
             }
 
             if(tempUser.token !== parseInt(token)) {
-                return res.status(400).json({ error: 'Invalid token' })
+                return res.status(400).json({ error: 'Usuário e/ou token inválidos' })
             }
 
             if(tempUser.expires_at < new Date()) {
-                return res.status(400).json({ error: 'Token expired' })
+                return res.status(400).json({ error: 'Token inválido' })
             }
 
             await prisma.tempUser.update({
@@ -119,11 +120,11 @@ class AuthController {
 
             PrismaClass.disconnect()
 
-            return res.status(200).json({ message: 'Token auhenticated' })
+            return res.status(200).json({ message: 'Token validado com sucesso' })
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 }

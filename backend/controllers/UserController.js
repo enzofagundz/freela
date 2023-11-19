@@ -22,15 +22,15 @@ class UserController {
             ])
 
             if(!verifyUser.used) {
-                return res.status(400).json({ error: 'User not authenticated' })
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
             }
 
             if(user) {
-                return res.status(400).json({ error: 'User already exists' })
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
             }
 
             if(password !== confirmPassword) {
-                return res.status(400).json({ error: 'Password does not match' })
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
             }
 
             const salt = await bcrypt.genSalt(10)
@@ -52,26 +52,33 @@ class UserController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
     
     async update(req, res) {
-        const { email, name, password, confirmPassword, work } = req.body
+        const id = parseInt(req.params.id)
+        let { name, password, confirmPassword, role } = req.body
 
         try {
             const user = await prisma.user.findUnique({
                 where: {
-                    email
+                    id
                 }
             })
 
             if(!user) {
-                return res.status(400).json({ error: 'User not found' })
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
             }
 
             if(password !== confirmPassword) {
-                return res.status(400).json({ error: 'Password does not match' })
+                console.log('aqui 2')
+                return res.status(400).json({ error: 'Usuário e/ou senha inválidos' })
+            }
+
+            if(!password && !confirmPassword) {
+                password = user.password
+                confirmPassword = user.password
             }
 
             const salt = await bcrypt.genSalt(10)
@@ -79,12 +86,12 @@ class UserController {
 
             const updatedUser = await prisma.user.update({
                 where: {
-                    email
+                    id
                 },
                 data: {
                     name,
                     password: passwordHash,
-                    work
+                    role
                 }
             })
 
@@ -96,7 +103,7 @@ class UserController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 
@@ -116,7 +123,7 @@ class UserController {
         } catch (error) {
             PrismaClass.disconnect()
             console.log(error)
-            return res.status(500).json({ error: 'Internal server error' })
+            return res.status(500).json({ error: 'Ops, ocorreu um erro interno, tente novamente server error' })
         }
     }
 }
